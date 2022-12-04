@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import tk.leooresende.crudusuarios.model.Situacao;
 import tk.leooresende.crudusuarios.model.Usuario;
 
-public class UsuarioForm {
+public class RegistrarUsuarioForm {
 	@NotBlank
 	@Size(min = 8, max = 25)
 	private String username;
@@ -24,7 +24,7 @@ public class UsuarioForm {
 	@Email
 	private String email;
 
-	public UsuarioForm(@NotBlank @Size(min = 8, max = 25) String username,
+	public RegistrarUsuarioForm(@NotBlank @Size(min = 8, max = 25) String username,
 			@NotBlank @Size(min = 8, max = 25) String password, @NotBlank String nomeCompleto,
 			@NotBlank @Email String email) {
 		this.username = username;
@@ -33,7 +33,7 @@ public class UsuarioForm {
 		this.email = email;
 	}
 
-	public UsuarioForm() {
+	public RegistrarUsuarioForm() {
 	}
 
 	public String getEmail() {

@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.validation.Valid;
+import tk.leooresende.crudusuarios.infra.dto.AlterarSenhaDto;
 import tk.leooresende.crudusuarios.infra.dto.EmailDto;
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioAtualizadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioDeletadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.AlterarSenhaForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.AtualizarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.CodigoDeVerificacaoInvalidoException;
 import tk.leooresende.crudusuarios.infra.handler.exception.SenhaInvalidaException;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsernameOuEmailJaUsadoException;
@@ -48,7 +50,8 @@ public class UsuarioService {
 	}
 
 	@Transactional
-	public UsuarioDto registrarOUsuario(@Valid UsuarioForm userForm, String urlApi) {
+	public UsuarioDto registrarOUsuario(@Valid RegistrarUsuarioForm userForm, String urlApi) {
+		UsuarioUtil.verificaSeAlgumCampoDoFormularioEstaEmBranco(userForm);
 		this.verificaSeOUsernameOuEmailJaEstaSendoUsado(userForm.getUsername(), userForm.getEmail());
 
 		Usuario usuarioCriado = userForm.criarUsuarioApartirDoFormulario();
@@ -59,7 +62,7 @@ public class UsuarioService {
 	}
 
 	@Transactional
-	public UsuarioDto atualizarInformacoesDoUsuario(@Valid UsuarioAtualizadoForm userForm, String usernameEmailOrId,
+	public UsuarioDto atualizarInformacoesDoUsuario(@Valid AtualizarUsuarioForm userForm, String usernameEmailOrId,
 			String urlApi) {
 		Usuario usuarioQueVaiSerAtualizado = this.buscarUsuarioPeloUsernameEmailOuIdNoDB(usernameEmailOrId);
 		this.verificarSeOUsuarioSolicitouAAlteracaoDoEmailOuUsername(userForm, usuarioQueVaiSerAtualizado, urlApi);
@@ -71,7 +74,7 @@ public class UsuarioService {
 	}
 
 	@Transactional
-	public void deletarUsuario(@Valid UsuarioDeletadoForm userDeletedForm, String usernameEmailOrId) {
+	public void deletarUsuario(@Valid DeletarUsuarioForm userDeletedForm, String usernameEmailOrId) {
 		Usuario usuario = this.buscarUsuarioPeloUsernameEmailOuIdNoDB(usernameEmailOrId);
 		this.verificarSeASenhaEstaCorreta(userDeletedForm.getPassword(), usuario.getPassword());
 		this.userRepo.deleteById(usuario.getId());
@@ -98,7 +101,21 @@ public class UsuarioService {
 
 		return new UsuarioDto(usuarioComOEmailVerificado);
 	}
+	
+	@Transactional
+	public AlterarSenhaDto alterarSenhaDoUsuario(@Valid AlterarSenhaForm alterarSenhaForm, String usernameEmailOrId) {
+		Usuario usuarioComASenhaAntiga = this.buscarUsuarioPeloUsernameEmailOuIdNoDB(usernameEmailOrId);
+		this.verificarSeASenhaEstaCorreta(alterarSenhaForm.getSenhaAtual(), usuarioComASenhaAntiga.getPassword());
+		UsuarioUtil.verificaSeAsSenhasSaoIdenticas(alterarSenhaForm.getSenhaAtual(), alterarSenhaForm.getNovaSenha());
 
+		alterarSenhaForm.alterarSenhaDoUsuario(usuarioComASenhaAntiga);
+		
+		Usuario usuarioComANovaSenha = this.salvarNovoUsuarioNoDB(usuarioComASenhaAntiga);
+		
+		UsuarioDto usuarioDto = new UsuarioDto(usuarioComANovaSenha);
+		return new AlterarSenhaDto(usuarioDto);
+	}
+	
 	private ValidacaoEmail verificarSeOCodigoEhValido(Integer userId, Integer codigoDeVerificacao) {
 		Optional<ValidacaoEmail> validacaoEmailOptional = this.validRepo.findByIdDoUsuario(userId);
 		if (validacaoEmailOptional.isEmpty())
@@ -161,7 +178,7 @@ public class UsuarioService {
 		}
 	}
 
-	private void verificarSeOUsuarioSolicitouAAlteracaoDoEmailOuUsername(UsuarioAtualizadoForm userForm,
+	private void verificarSeOUsuarioSolicitouAAlteracaoDoEmailOuUsername(AtualizarUsuarioForm userForm,
 			Usuario usuario, String urlApi) {
 		boolean emailFoiAlterado = !usuario.getEmail().equals(userForm.getEmail());
 		boolean usernameFoiAlterado = !usuario.getUsername().equals(userForm.getUsername());
@@ -195,8 +212,8 @@ public class UsuarioService {
 			throw new UsernameOuEmailJaUsadoException();
 	}
 	
-	private void verificarSeASenhaEstaCorreta(String senhaDoFormulario, String senhaCorretaDoUsuario) {
-		Boolean aSenhaEstaCorreta = this.passEncoder.matches(senhaDoFormulario, senhaCorretaDoUsuario);
+	private void verificarSeASenhaEstaCorreta(String senhaDoFormulario, String senhaCorretaDoUsuarioComHash) {
+		Boolean aSenhaEstaCorreta = this.passEncoder.matches(senhaDoFormulario, senhaCorretaDoUsuarioComHash);
 		if (!aSenhaEstaCorreta) {
 			throw new SenhaInvalidaException();
 		}

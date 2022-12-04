@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioAtualizadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioDeletadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.AtualizarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsernameOuEmailJaUsadoException;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsuarioNaoExisteException;
 import tk.leooresende.crudusuarios.testes.util.UsuarioServiceTestUtil;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioAtualizadoFormFactory;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioDeletadoFormFactory;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.AtualizarUsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.DeletarUsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.RegistrarUsuarioFormFactory;
 
 
 @SpringBootTest
@@ -28,22 +28,22 @@ public class AtualizarUsuarioTest {
 
 	private UsuarioDto usuarioDto;
 
-	private UsuarioDeletadoForm userDeletedForm;
+	private DeletarUsuarioForm userDeletedForm;
 
-	private UsuarioForm usuarioForm;
+	private RegistrarUsuarioForm usuarioForm;
 	
 	private final Integer idInvalido = -1;
 
 	@BeforeEach
 	void criarFormularioDeUsuario() {
-		this.usuarioForm = UsuarioFormFactory.criarUsuarioFormValido();
-		this.userDeletedForm = UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaValida();
+		this.usuarioForm = RegistrarUsuarioFormFactory.criarUsuarioFormValido();
+		this.userDeletedForm = DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaValida();
 		this.usuarioDto = this.userTestUtil.registrarUsuario(usuarioForm);
 	}
 
 	@Test
 	void deveriaAtualizarOUsuarioComAsNovasInformacoes() {
-		UsuarioAtualizadoForm usuarioAtualizadoForm = UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoForm();
+		AtualizarUsuarioForm usuarioAtualizadoForm = AtualizarUsuarioFormFactory.criarUsuarioAtualizadoForm();
 		UsuarioDto usuarioAtualizado = this.userTestUtil.atualizarUsuario(usuarioAtualizadoForm,
 				this.usuarioDto.getId().toString());
 		assertEquals(usuarioAtualizadoForm.getUsername(), usuarioAtualizado.getUsername());
@@ -53,17 +53,17 @@ public class AtualizarUsuarioTest {
 
 	@Test
 	void deveriaLancarUmaExcessaoCasoTenteAtualizarOEmailOuUsernameParaUmJaExistente() {
-		UsuarioForm usuarioFormAlternativo = UsuarioFormFactory.criarUsuarioFormValido2();
+		RegistrarUsuarioForm usuarioFormAlternativo = RegistrarUsuarioFormFactory.criarUsuarioFormValido2();
 		this.userTestUtil.registrarUsuario(usuarioFormAlternativo);
 
-		UsuarioAtualizadoForm usuarioAtualizadoFormTesteUsername = UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoForm();
+		AtualizarUsuarioForm usuarioAtualizadoFormTesteUsername = AtualizarUsuarioFormFactory.criarUsuarioAtualizadoForm();
 		usuarioAtualizadoFormTesteUsername.setUsername(usuarioFormAlternativo.getUsername());
 
 		assertThrows(UsernameOuEmailJaUsadoException.class,
 				() -> this.userTestUtil.atualizarUsuario(usuarioAtualizadoFormTesteUsername, this.usuarioDto.getId().toString()));
 		
 		
-		UsuarioAtualizadoForm usuarioAtualizadoFormTesteEmail = UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoForm();
+		AtualizarUsuarioForm usuarioAtualizadoFormTesteEmail = AtualizarUsuarioFormFactory.criarUsuarioAtualizadoForm();
 		usuarioAtualizadoFormTesteEmail.setEmail(usuarioFormAlternativo.getEmail());
 		assertThrows(UsernameOuEmailJaUsadoException.class,
 				() -> this.userTestUtil.atualizarUsuario(usuarioAtualizadoFormTesteEmail, this.usuarioDto.getId().toString()));
@@ -74,23 +74,23 @@ public class AtualizarUsuarioTest {
 	@Test
 	void deveriaLancarUmaExcessaoCasoOUsuarioQueVaiSerAtualizadoNaoExista() {
 		assertThrows(UsuarioNaoExisteException.class, () -> this.userTestUtil
-				.atualizarUsuario(UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoForm(), this.idInvalido.toString()));
+				.atualizarUsuario(AtualizarUsuarioFormFactory.criarUsuarioAtualizadoForm(), this.idInvalido.toString()));
 	}
 	
 	@Test
 	void deveriaLancarUmaExcessaoCasoOFormularioDeAtualizacaoSejaNuloOuEstejaEmBranco() {
 		assertThrows(Exception.class, () -> this.userTestUtil
-				.atualizarUsuario(UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoFormNulo(), this.idInvalido.toString()));
+				.atualizarUsuario(AtualizarUsuarioFormFactory.criarUsuarioAtualizadoFormNulo(), this.idInvalido.toString()));
 		assertThrows(Exception.class, () -> this.userTestUtil
-				.atualizarUsuario(UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoFormEmBranco(), this.idInvalido.toString()));
+				.atualizarUsuario(AtualizarUsuarioFormFactory.criarUsuarioAtualizadoFormEmBranco(), this.idInvalido.toString()));
 	}
 	
 	@Test
 	void deveriaLancarUmaExcessaoCasoOFormatoDoUsernameOuEmailForInvalido() {
 		assertThrows(Exception.class, () -> this.userTestUtil
-				.atualizarUsuario(UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoFormComEmailEmUmFormatoInvalido(), this.idInvalido.toString()));
+				.atualizarUsuario(AtualizarUsuarioFormFactory.criarUsuarioAtualizadoFormComEmailEmUmFormatoInvalido(), this.idInvalido.toString()));
 		assertThrows(Exception.class, () -> this.userTestUtil
-				.atualizarUsuario(UsuarioAtualizadoFormFactory.criarUsuarioAtualizadoFormComUsernameEmUmFormatoInvalido(), this.idInvalido.toString()));
+				.atualizarUsuario(AtualizarUsuarioFormFactory.criarUsuarioAtualizadoFormComUsernameEmUmFormatoInvalido(), this.idInvalido.toString()));
 	}
 	
 	@AfterEach

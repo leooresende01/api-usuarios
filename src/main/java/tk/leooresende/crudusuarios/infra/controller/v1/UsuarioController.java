@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.validation.Valid;
+import tk.leooresende.crudusuarios.infra.dto.AlterarSenhaDto;
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioAtualizadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioDeletadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.AlterarSenhaForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.AtualizarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.service.v1.UsuarioService;
 
 @RestController
@@ -38,7 +40,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UsuarioDto> registrarUmUsuario(@RequestBody @Valid UsuarioForm userForm,
+	public ResponseEntity<UsuarioDto> registrarUmUsuario(@RequestBody @Valid RegistrarUsuarioForm userForm,
 			UriComponentsBuilder uri) throws URISyntaxException {
 		String urlApi = uri.toUriString();
 		UsuarioDto usuarioRegistrado = this.usuarioService.registrarOUsuario(userForm, urlApi);
@@ -49,17 +51,17 @@ public class UsuarioController {
 
 	@PutMapping("/{usernameEmailOrId}")
 	public ResponseEntity<UsuarioDto> atualizarUsuarioPeloUsernameEmailOuId(
-			@RequestBody @Valid UsuarioAtualizadoForm userAtualizadoForm, @PathVariable String usernameEmailOrId,
+			@RequestBody @Valid AtualizarUsuarioForm userAtualizadoForm, @PathVariable String usernameEmailOrId,
 			UriComponentsBuilder uri) throws URISyntaxException {
 		String urlApi = uri.toUriString();
-		UsuarioDto usuarioAtualizado = this.usuarioService
-				.atualizarInformacoesDoUsuario(userAtualizadoForm, usernameEmailOrId, urlApi);
+		UsuarioDto usuarioAtualizado = this.usuarioService.atualizarInformacoesDoUsuario(userAtualizadoForm,
+				usernameEmailOrId, urlApi);
 		return ResponseEntity.ok(usuarioAtualizado);
 	}
-	
+
 	@DeleteMapping("/{usernameEmailOrId}")
-	public ResponseEntity<Void> deletarUsuarioPeloUsernameEmailOuId(@RequestBody @Valid UsuarioDeletadoForm userDeletedForm,
-			@PathVariable String usernameEmailOrId) {
+	public ResponseEntity<Void> deletarUsuarioPeloUsernameEmailOuId(
+			@RequestBody @Valid DeletarUsuarioForm userDeletedForm, @PathVariable String usernameEmailOrId) {
 		this.usuarioService.deletarUsuario(userDeletedForm, usernameEmailOrId);
 		return ResponseEntity.noContent().build();
 	}
@@ -75,5 +77,12 @@ public class UsuarioController {
 			@PathVariable Integer userId) {
 		UsuarioDto usuarioComOEmailVerificado = this.usuarioService.validarEmailDoUsuario(userId, codigo);
 		return ResponseEntity.ok(usuarioComOEmailVerificado);
+	}
+
+	@PutMapping("/{usernameEmailOrId}/alterarSenha")
+	public ResponseEntity<AlterarSenhaDto> alterarSenhaDeUmUsuario(@RequestBody @Valid AlterarSenhaForm alterarSenhaForm,
+			@PathVariable String usernameEmailOrId) {
+		AlterarSenhaDto alterarSenhaDto = this.usuarioService.alterarSenhaDoUsuario(alterarSenhaForm, usernameEmailOrId);
+		return ResponseEntity.ok(alterarSenhaDto);
 	}
 }

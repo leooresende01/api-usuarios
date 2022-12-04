@@ -9,6 +9,7 @@
 		- [***4. Deletar um usuário***](#4-deletar-um-usuário)
 		- [***5. Buscar um unico usuário registrado***](#5-buscar-um-unico-usuário-registrado)
 		- [***6. Validar e-mail usando o código***](#6-validar-e-mail-usando-o-código)
+		- [***7. Alterar a senha de um usuário***](#7-alterar-a-senha-de-um-usuário)
 
 
 
@@ -188,6 +189,38 @@ URL: {{host}}/api/v1/usuarios/:userId/validarEmail
 | userId | {{userId}} |
 
 
+
+
+### ***7. Alterar a senha de um usuário***
+
+Valida o e-mail do usuário usando o código de verificação enviado por e-mail.
+
+
+***Endpoint:***
+
+```bash
+Method: PUT
+Type: RAW/JSON
+Auth Type: none
+URL: {{host}}/api/v1/usuarios/:usernameEmailOuId/alterarSenha
+```
+
+***URL variables:***
+
+| Key               | Value                 |
+| ----------------- | --------------------- |
+| usernameEmailOuId | {{usernameEmailOuId}} |
+
+
+
+***Body:***
+
+```js        
+{   
+    "senhaAtual": "{{senhaAtual}}",
+    "novaSenha": "{{novaSenha}}"
+}
+```
 
 
 ---

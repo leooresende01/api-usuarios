@@ -1,0 +1,11 @@
+*É necessario exportar as variaveis de ambiente de configuração do banco de dados
+
+DB_URL -> Host do banco de dados
+DB_NAME -> Nome do banco de dados ou schema
+DB_USERNAME -> Nome de usuario do DB
+DB_PASSWORD -> Senha do DB
+SERVER_PORT -> Porta que o servidor vai escutar quando subir
+
+
+*O e-mail usado para verificação foi criado apenas para esse fim
+

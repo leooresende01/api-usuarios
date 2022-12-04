@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioDeletadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.CodigoDeVerificacaoInvalidoException;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsernameOuEmailJaUsadoException;
 import tk.leooresende.crudusuarios.model.Situacao;
 import tk.leooresende.crudusuarios.model.ValidacaoEmail;
 import tk.leooresende.crudusuarios.testes.util.UsuarioServiceTestUtil;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioDeletadoFormFactory;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.DeletarUsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.RegistrarUsuarioFormFactory;
 
 @SpringBootTest
 public class RegistrarUsuarioTest {
@@ -28,15 +28,15 @@ public class RegistrarUsuarioTest {
 	@Autowired
 	private UsuarioServiceTestUtil userTestUtil;
 
-	private UsuarioForm usuarioForm;
-	private UsuarioDeletadoForm userDeletedForm;
+	private RegistrarUsuarioForm usuarioForm;
+	private DeletarUsuarioForm userDeletedForm;
 
 	private UsuarioDto usuarioCriado;
 
 	@BeforeEach
 	void criarFormularioDeUsuario() {
-		this.usuarioForm = UsuarioFormFactory.criarUsuarioFormValido();
-		this.userDeletedForm = UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaValida();
+		this.usuarioForm = RegistrarUsuarioFormFactory.criarUsuarioFormValido();
+		this.userDeletedForm = DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaValida();
 		this.usuarioCriado = this.userTestUtil.registrarUsuario(this.usuarioForm);
 	}
 
@@ -74,19 +74,19 @@ public class RegistrarUsuarioTest {
 	@Test
 	void deveriaLancarUmaExcessaoCasoOFormularioForInvalido() {
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.registrarUsuario(UsuarioFormFactory.criarUsuarioFormNulo()));
+				() -> this.userTestUtil.registrarUsuario(RegistrarUsuarioFormFactory.criarUsuarioFormNulo()));
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.registrarUsuario(UsuarioFormFactory.criarUsuarioFormEmBranco()));
+				() -> this.userTestUtil.registrarUsuario(RegistrarUsuarioFormFactory.criarUsuarioFormEmBranco()));
 	}
 
 	@Test
 	void deveriaLancarUmaExcessaoCasoOFormatoDoUsernameEmailOuSenhaForInvalido() {
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.registrarUsuario(UsuarioFormFactory.criarUsuarioFormComUsernameInvalido()));
+				() -> this.userTestUtil.registrarUsuario(RegistrarUsuarioFormFactory.criarUsuarioFormComUsernameInvalido()));
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.registrarUsuario(UsuarioFormFactory.criarUsuarioFormComEmailInvalido()));
+				() -> this.userTestUtil.registrarUsuario(RegistrarUsuarioFormFactory.criarUsuarioFormComEmailInvalido()));
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.registrarUsuario(UsuarioFormFactory.criarUsuarioFormComSenhaInvalida()));
+				() -> this.userTestUtil.registrarUsuario(RegistrarUsuarioFormFactory.criarUsuarioFormComSenhaInvalida()));
 	}
 
 	@AfterEach

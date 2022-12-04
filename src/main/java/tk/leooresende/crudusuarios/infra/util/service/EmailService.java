@@ -2,13 +2,11 @@ package tk.leooresende.crudusuarios.infra.util.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import tk.leooresende.crudusuarios.infra.dto.EmailDto;
-import tk.leooresende.crudusuarios.infra.handler.exception.EmailNaoPodeSerEnviadoException;
 
 @Service
 public class EmailService {
@@ -27,9 +25,7 @@ public class EmailService {
 			mailMessage.setText(details.getMsgBody());
 			mailMessage.setSubject(details.getSubject());
 			javaMailSender.send(mailMessage);
-		} catch (MailSendException ex) {
-		} catch (Exception ex2) {
-			throw new EmailNaoPodeSerEnviadoException();
+		} catch (Exception ex) {
 		}
 	}
 }

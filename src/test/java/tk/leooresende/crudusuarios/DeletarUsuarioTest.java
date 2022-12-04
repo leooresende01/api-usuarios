@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioDeletadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.SenhaInvalidaException;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsuarioNaoExisteException;
 import tk.leooresende.crudusuarios.testes.util.UsuarioServiceTestUtil;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioDeletadoFormFactory;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.DeletarUsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.RegistrarUsuarioFormFactory;
 
 @SpringBootTest
 public class DeletarUsuarioTest {
@@ -25,16 +25,16 @@ public class DeletarUsuarioTest {
 
 	private UsuarioDto usuarioDto;
 
-	private UsuarioDeletadoForm userDeletedForm;
+	private DeletarUsuarioForm userDeletedForm;
 
-	private UsuarioForm usuarioForm;
+	private RegistrarUsuarioForm usuarioForm;
 
 	private final Integer idInvalido = -1;
 
 	@BeforeEach
 	void criarFormularioDeUsuario() {
-		this.usuarioForm = UsuarioFormFactory.criarUsuarioFormValido();
-		this.userDeletedForm = UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaValida();
+		this.usuarioForm = RegistrarUsuarioFormFactory.criarUsuarioFormValido();
+		this.userDeletedForm = DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaValida();
 		this.usuarioDto = this.userTestUtil.registrarUsuario(usuarioForm);
 	}
 
@@ -47,24 +47,24 @@ public class DeletarUsuarioTest {
 	void deveriaLancarUmaExcessaoCasoASenhaForInvalida() {
 		assertThrows(SenhaInvalidaException.class,
 				() -> this.userTestUtil.deletarUsuario(
-						UsuarioDeletadoFormFactory.pegarUserDeletedFormComSenhaInvalida(),
+						DeletarUsuarioFormFactory.pegarUserDeletedFormComSenhaInvalida(),
 						this.usuarioDto.getUsername()));
 	}
 
 	@Test
 	void deveriaLancarUmaExcessaoCasoOUsuarioQueVaiSerDeletadoNaoExista() {
 		assertThrows(UsuarioNaoExisteException.class,
-				() -> this.userTestUtil.deletarUsuario(UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaValida(),
+				() -> this.userTestUtil.deletarUsuario(DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaValida(),
 						this.idInvalido.toString()));
 	}
 	
 	@Test
 	void deveriaLancarUmaExcessaoCasoASenhaEnviadaForNulaOuEstejaVazia() {
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.deletarUsuario(UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaNula(),
+				() -> this.userTestUtil.deletarUsuario(DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaNula(),
 						this.idInvalido.toString()));
 		assertThrows(Exception.class,
-				() -> this.userTestUtil.deletarUsuario(UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaVazia(),
+				() -> this.userTestUtil.deletarUsuario(DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaVazia(),
 						this.idInvalido.toString()));
 	}
 

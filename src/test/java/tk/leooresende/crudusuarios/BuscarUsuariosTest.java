@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioDeletadoForm;
-import tk.leooresende.crudusuarios.infra.dto.formularios.UsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
+import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsuarioNaoExisteException;
 import tk.leooresende.crudusuarios.testes.util.UsuarioServiceTestUtil;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioDeletadoFormFactory;
-import tk.leooresende.crudusuarios.testes.util.factory.UsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.DeletarUsuarioFormFactory;
+import tk.leooresende.crudusuarios.testes.util.factory.RegistrarUsuarioFormFactory;
 
 
 
@@ -24,15 +24,15 @@ public class BuscarUsuariosTest {
 
 	@Autowired
 	private UsuarioServiceTestUtil userTestUtil;
-	private UsuarioForm usuarioForm;
-	private UsuarioDeletadoForm userDeletedForm;
+	private RegistrarUsuarioForm usuarioForm;
+	private DeletarUsuarioForm userDeletedForm;
 	private UsuarioDto usuarioDto;
 	private final Integer idDeUsuarioInvalido = -1;
 
 	@BeforeEach
 	void criarFormularioDeUsuario() {
-		this.usuarioForm = UsuarioFormFactory.criarUsuarioFormValido();
-		this.userDeletedForm = UsuarioDeletadoFormFactory.pegarUserDeletedFormComASenhaValida();
+		this.usuarioForm = RegistrarUsuarioFormFactory.criarUsuarioFormValido();
+		this.userDeletedForm = DeletarUsuarioFormFactory.pegarUserDeletedFormComASenhaValida();
 		this.usuarioDto = this.userTestUtil.registrarUsuario(usuarioForm);
 	}
 
