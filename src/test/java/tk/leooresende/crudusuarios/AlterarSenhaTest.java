@@ -1,7 +1,9 @@
 package tk.leooresende.crudusuarios;
 
-import static org.junit.Assert.assertThrows;
+
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
