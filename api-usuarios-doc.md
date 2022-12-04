@@ -103,7 +103,7 @@ URL: {{host}}/api/v1/usuarios/:usernameEmailOuId
 
 ### ***4. Alterar a senha de um usuário***
 
-Valida o e-mail do usuário usando o código de verificação enviado por e-mail.
+Altera a senha de um usuário caso a senha antiga for valida.
 
 
 ***Endpoint:***
