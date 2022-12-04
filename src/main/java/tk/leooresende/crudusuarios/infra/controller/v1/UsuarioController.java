@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,7 +59,14 @@ public class UsuarioController {
 				usernameEmailOrId, urlApi);
 		return ResponseEntity.ok(usuarioAtualizado);
 	}
-
+	
+	@PatchMapping("/{usernameEmailOrId}/alterarSenha")
+	public ResponseEntity<AlterarSenhaDto> alterarSenhaDeUmUsuario(@RequestBody @Valid AlterarSenhaForm alterarSenhaForm,
+			@PathVariable String usernameEmailOrId) {
+		AlterarSenhaDto alterarSenhaDto = this.usuarioService.alterarSenhaDoUsuario(alterarSenhaForm, usernameEmailOrId);
+		return ResponseEntity.ok(alterarSenhaDto);
+	}
+	
 	@DeleteMapping("/{usernameEmailOrId}")
 	public ResponseEntity<Void> deletarUsuarioPeloUsernameEmailOuId(
 			@RequestBody @Valid DeletarUsuarioForm userDeletedForm, @PathVariable String usernameEmailOrId) {
@@ -77,12 +85,5 @@ public class UsuarioController {
 			@PathVariable Integer userId) {
 		UsuarioDto usuarioComOEmailVerificado = this.usuarioService.validarEmailDoUsuario(userId, codigo);
 		return ResponseEntity.ok(usuarioComOEmailVerificado);
-	}
-
-	@PutMapping("/{usernameEmailOrId}/alterarSenha")
-	public ResponseEntity<AlterarSenhaDto> alterarSenhaDeUmUsuario(@RequestBody @Valid AlterarSenhaForm alterarSenhaForm,
-			@PathVariable String usernameEmailOrId) {
-		AlterarSenhaDto alterarSenhaDto = this.usuarioService.alterarSenhaDoUsuario(alterarSenhaForm, usernameEmailOrId);
-		return ResponseEntity.ok(alterarSenhaDto);
 	}
 }

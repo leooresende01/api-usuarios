@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import jakarta.validation.Valid;
-import tk.leooresende.crudusuarios.infra.SenhaNaoMudouException;
 import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.EmailJaFoiValidadoException;
 import tk.leooresende.crudusuarios.infra.handler.exception.EmailNaoValidadoException;
 import tk.leooresende.crudusuarios.infra.handler.exception.FormularioEmBrancoException;
+import tk.leooresende.crudusuarios.infra.handler.exception.SenhaNaoMudouException;
 import tk.leooresende.crudusuarios.model.Situacao;
 import tk.leooresende.crudusuarios.model.Usuario;
 

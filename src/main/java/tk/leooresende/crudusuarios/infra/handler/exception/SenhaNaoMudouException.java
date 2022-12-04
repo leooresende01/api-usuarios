@@ -1,8 +1,6 @@
-package tk.leooresende.crudusuarios.infra;
+package tk.leooresende.crudusuarios.infra.handler.exception;
 
 import org.springframework.http.HttpStatus;
-
-import tk.leooresende.crudusuarios.infra.handler.exception.ErrorException;
 
 public class SenhaNaoMudouException extends ErrorException {
 	private static final long serialVersionUID = 1L;

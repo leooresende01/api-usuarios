@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import tk.leooresende.crudusuarios.infra.SenhaNaoMudouException;
 import tk.leooresende.crudusuarios.infra.dto.UsuarioDto;
 import tk.leooresende.crudusuarios.infra.dto.formularios.AlterarSenhaForm;
 import tk.leooresende.crudusuarios.infra.dto.formularios.DeletarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.dto.formularios.RegistrarUsuarioForm;
 import tk.leooresende.crudusuarios.infra.handler.exception.SenhaInvalidaException;
+import tk.leooresende.crudusuarios.infra.handler.exception.SenhaNaoMudouException;
 import tk.leooresende.crudusuarios.infra.handler.exception.UsuarioNaoExisteException;
 import tk.leooresende.crudusuarios.testes.util.UsuarioServiceTestUtil;
 import tk.leooresende.crudusuarios.testes.util.factory.AlterarSenhaFormFactory;

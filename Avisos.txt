@@ -9,3 +9,6 @@ SERVER_PORT -> Porta que o servidor vai escutar quando subir
 
 *O e-mail usado para verificação foi criado apenas para esse fim
 
+
+Link do projeto no GitHub: https://github.com/leooresende01/api-usuarios
+Link da doc: https://github.com/leooresende01/api-usuarios/blob/main/api-usuarios-doc.md
